@@ -6,8 +6,9 @@ const db=require('./config/keys').mongoURI
 const bodyParser=require('body-parser')
 
 const profile=require('./routes/api/profile')
-const users=require('./routes/api/users')
-const posts=require('./routes/api/posts')
+const users=require('./routes/api/users');
+const posts=require('./routes/api/posts');
+
 
 
 const port=process.env.port || 3000
@@ -39,7 +40,8 @@ app.get('/',(req,res)=>{
 
 
 app.use('/api/users',users)
-//app.use('api/profile',profile)
+app.use('/api/profile',profile)
+
 //app.use('api/posts',posts)
 
 app.listen(process.env.port ||3000,()=>{console.log('server started on ',port )})

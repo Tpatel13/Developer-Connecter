@@ -6,17 +6,22 @@ const jwt =require('jsonwebtoken')
 const keys=require('../../config/keys.js')
 const passport=require('passport')
 const validateRegisterInput=require('../../validation/register.js')
+const validateLoginInput=require('../../validation/login.js')
+
 router.post('/register',(req,res)=>{
     
-    const {error,isValid}=validateRegisterInput(req.body)
-   
+    const {errors,isValid}=validateRegisterInput(req.body)
+  
     if(!isValid){
-        res.status(400).json({error})
-    }
+        res.status(400).json({errors})
+     }
+    
     User.findOne({email:req.body.email}).then(user=>{
+
+        
                if(user){
                  
-           return res.status(400).json({email:'User already exists'})
+                     return res.status(400).json({email:'User already exists'})
                }
                else{
                    
@@ -44,6 +49,7 @@ router.post('/register',(req,res)=>{
 })
 
 router.get('/current',passport.authenticate('jwt',{ session:false }),(req,res)=>{
+    
     res.json(req.user)
 })
 
@@ -51,26 +57,33 @@ router.get('/current',passport.authenticate('jwt',{ session:false }),(req,res)=>
 router.post('/login',(req,res)=>{
     
      const email=req.body.email,password=req.body.password;
+     const {errors,isValid}=validateLoginInput(req.body);
+     if(!isValid){
+       return res.status(400).json({errors});
+     }
+
      User.findOne({email})
      .then(user=>{
          //check user
-         if(!user)return res.json({email:'email not Found'})
+         errors.email='Email not found '
+         if(!user)return res.json({email:errors.email})
          //check Password
          bcrypt.compare(password,user.password).then(isMatch=>{
              if(isMatch){
                  const payload={id:user.id,name:user.name}
                  //User matched
 
-                 jwt.sign(payload,keys.key,{expiresIn:3600},(err,token)=>{
-                   token='baerer '+token
+                 jwt.sign(payload,keys.key,{expiresIn:88800},(err,token)=>{
+                   token='Bearer '+token
                     res.json({token})
                  })
                 
                
              }
-             else 
+             else
              {
-                 return res.json({msg:"Password is incorrect"})
+                 errors.password='Password is Incorrect'
+                 return res.json({password:errors.password})
              }
          })
      })
