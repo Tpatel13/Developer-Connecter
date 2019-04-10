@@ -33,7 +33,6 @@ mongoose
 
 
 
-
 app.get('/',(req,res)=>{
    res.send();
 })
@@ -41,7 +40,7 @@ app.get('/',(req,res)=>{
 
 app.use('/api/users',users)
 app.use('/api/profile',profile)
+app.use('/api/posts',posts)
 
-//app.use('api/posts',posts)
 
 app.listen(process.env.port ||3000,()=>{console.log('server started on ',port )})
