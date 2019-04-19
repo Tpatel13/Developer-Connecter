@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   isEmpty: params => {
     return (
       params === undefined ||

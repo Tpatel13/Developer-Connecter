@@ -1,28 +1,26 @@
-const Validator=require('validator')
-const isEmpty=require('./is-empty')
+var Validator = require("validator");
+var { isEmpty } = require("./is-empty");
 
-const validateLoginInput=(data)=>{
-     
-    data.email = !isEmpty(data.email)?data.email:'';
-    data.password = !isEmpty(data.password)?data.password:'';
-    let errors={}
-   
-    
-    if(Validator.isEmpty(data.email)){
-        errors.email='Email is empty'
+module.exports = {
+  validateLoginInput: data => {
+    let errors = {};
+
+    data.email = !isEmpty(data.email) ? data.email : "";
+    data.password = !isEmpty(data.password) ? data.password : "";
+
+    if (!Validator.isEmail(data.email)) {
+      errors.email = "Email is invalid";
     }
-    if(!Validator.isEmail(data.email) ){
-        
-        errors.email='Email is not valid'
+    if (Validator.isEmpty(data.email)) {
+      errors.email = "Email Field is required";
     }
-    if(Validator.isEmpty(data.password)){
-        errors.password='Password is Required!!'
+    if (Validator.isEmpty(data.password)) {
+      errors.password = "Password Field is required";
     }
-    
+
     return {
-        errors,
-        isValid:isEmpty(errors)
-    }
-}
-
-module.exports=validateLoginInput; 
+      errors,
+      isValid: isEmpty(errors)
+    };
+  }
+};

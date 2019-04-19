@@ -1,30 +1,23 @@
-const mongoose=require('mongoose')
+var mongoose = require("mongoose");
 
-const Schema =mongoose.Schema;
+var UserSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  password: { type: String, required: true },
+  avatar: { type: String },
+  timestamp: { type: Date, default: Date.now }
+});
 
-//create Schema
+UserSchema.methods.summary = function() {
+  var summary = {
+    name: this.name,
+    email: this.email,
+    avatar: this.avatar,
+    timestamp: this.timestamp,
+    id: this._id.toString()
+  };
 
-const UserSchema=new Schema({
-    name:{
-        type:String,
-        required:true
-    },
-    email:{
-        type:String,
-        required:true
-    },
-    password:{
-        type:String,
-        required:false
-    },
-    avatar:{
-        type:String,
-        required:false
-    },
-    date:{
-        type:Date,
-        default:Date.now
-    }
-})
+  return summary;
+};
 
- module.exports= User =  mongoose.model('users',UserSchema)
+module.exports = mongoose.model("UserSchema", UserSchema);
